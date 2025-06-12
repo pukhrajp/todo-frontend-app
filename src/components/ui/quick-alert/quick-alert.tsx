@@ -31,6 +31,9 @@ export function QuickAlert({
   type = "info",
   className,
 }: QuickAlertProps) {
+  if (!message) {
+    return null; // Return null if no message is provided
+  }
   return (
     <div className={className}>
       <Alert className={cn(colorMap[type].bgColor, colorMap[type].textColor)}>
