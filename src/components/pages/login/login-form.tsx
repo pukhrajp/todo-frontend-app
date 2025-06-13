@@ -1,14 +1,15 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button } from "../../ui/button";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+
 import React from "react";
 import { QuickAlert } from "../../ui/quick-alert/quick-alert";
+import { myAxios, setAuthToken } from "../../../lib/axios";
 
 const LoginFormSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -23,14 +24,16 @@ export function LoginForm() {
   } = useForm({
     resolver: zodResolver(LoginFormSchema),
   });
+  const navigate = useNavigate();
   const [serverError, setServerError] = React.useState("");
 
   function handleFormSubmit(data: any) {
-    axios
-      .post("http://localhost:8000/login", data)
+    myAxios
+      .post("/login", data)
       .then((response) => {
         const { user, token } = response.data;
-        console.log("Login successful", response, user, token);
+        setAuthToken(token);
+        navigate("/");
       })
       .catch((error) => {
         setServerError(error.response?.data || "Login failed");
