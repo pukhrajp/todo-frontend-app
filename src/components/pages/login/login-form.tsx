@@ -33,6 +33,10 @@ export function LoginForm() {
       .then((response) => {
         const { user, token } = response.data;
         setAuthToken(token);
+        if (!user.isEmailVerified) {
+          navigate("/account-verification");
+          return;
+        }
         navigate("/");
       })
       .catch((error) => {
