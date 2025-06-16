@@ -1,12 +1,13 @@
 import { RouterProvider } from "react-router";
 import { routes } from "./routes";
-import { setAuthToken } from "./lib/axios";
+import { AuthProvider } from "./components/providers/auth-provider/auth-provider";
 
 function App() {
-  const token = localStorage.getItem("token");
-  setAuthToken(token);
-
-  return <RouterProvider router={routes} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={routes} />
+    </AuthProvider>
+  );
 }
 
 export default App;
