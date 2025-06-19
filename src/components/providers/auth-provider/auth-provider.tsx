@@ -1,7 +1,6 @@
 import React from "react";
 import { AuthContext } from "./auth-context";
 import { myAxios, setAuthToken } from "../../../lib/axios";
-import { set } from "react-hook-form";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<any>(null);
