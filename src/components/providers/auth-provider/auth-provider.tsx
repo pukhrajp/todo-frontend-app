@@ -1,6 +1,7 @@
 import React from "react";
 import { AuthContext } from "./auth-context";
 import { myAxios, setAuthToken } from "../../../lib/axios";
+import { set } from "react-hook-form";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<any>(null);
@@ -13,14 +14,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       myAxios
         .get("/current-user")
         .then((response) => {
-          console.log("Current user:", response.data);
           setUser(response.data);
           setLoading(false);
         })
-        .catch((error) => {
-          console.error("Error fetching current user:", error);
+        .catch(() => {
           setLoading(false);
+          setAuthToken(null);
         });
+    } else {
+      setLoading(false);
+      setUser(null);
     }
   }, []);
 
