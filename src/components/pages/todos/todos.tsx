@@ -5,50 +5,57 @@ import React from "react";
 import { myAxios } from "../../../lib/axios";
 import { AddTodoForm } from "./add-todo-form";
 import { Button } from "../../ui/button";
-import { todoAppReducer, type Todo } from "./todo-app-reducer";
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodo,
+  removeTodo,
+  setLoading,
+  setTodos,
+  useTodoState,
+} from "../../../redux/slices/todoSlice";
 
 export function Todos() {
-  const [todoAppState, dispatch] = React.useReducer(todoAppReducer, {
-    todos: [],
-    loading: true,
-  });
+  // const [todoAppState, dispatch] = React.useReducer(todoAppReducer, {
+  //   todos: [],
+  //   loading: true,
+  // });
+  const dispatch = useDispatch();
+  const todoAppState = useTodoState();
 
   const { todos, loading } = todoAppState;
 
   React.useEffect(() => {
-    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch(setLoading(true));
     myAxios
       .get("/todos")
       .then((response) => {
-        dispatch({ type: "SET_TODO", payload: response.data.todos });
+        dispatch(setTodos(response.data.todos));
       })
       .catch((error) => {
         console.error("Error fetching todos:", error);
+        dispatch(setLoading(false));
       });
   }, []);
 
   function deleteTodo(todoId: string) {
-    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch(setLoading(true));
     myAxios
       .delete(`/todos/${todoId}`)
       .then(() => {
-        dispatch({ type: "DELETE_TODO", payload: todoId });
-        // refreshTodos();
+        dispatch(removeTodo(todoId));
       })
       .catch((error) => {
         console.error("Error deleting todo:", error);
+        dispatch(setLoading(false));
       });
   }
 
   function updateTodo(isChecked: boolean, todoId: string) {
-    dispatch({ type: "SET_LOADING", payload: true });
+    dispatch(setLoading(true));
     myAxios
       .patch(`/todos/${todoId}`, { completed: isChecked })
       .then((response) => {
-        dispatch({
-          type: "UPDATE_TODO",
-          payload: response.data.todo,
-        });
         // refreshTodos();
       })
       .catch((error) => {
@@ -56,12 +63,12 @@ export function Todos() {
       });
   }
 
-  function addTodo(data: { title: string }) {
-    dispatch({ type: "SET_LOADING", payload: true });
+  function saveTodo(data: { title: string }) {
+    dispatch(setLoading(true));
     myAxios
       .post("/todos", data)
       .then((response) => {
-        dispatch({ type: "ADD_TODO", payload: response.data.todo });
+        dispatch(addTodo(response.data.todo));
       })
       .catch((error) => {
         console.error("Error adding todo:", error);
@@ -80,7 +87,7 @@ export function Todos() {
             <CardTitle>Add Todo</CardTitle>
           </CardHeader>
           <CardContent className="p-2 flex items-center gap-2">
-            <AddTodoForm onSave={addTodo} />
+            <AddTodoForm onSave={saveTodo} />
           </CardContent>
         </Card>
       </div>
