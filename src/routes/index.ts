@@ -9,6 +9,7 @@ import { Signup } from "../components/pages/signup";
 import { AnonymousLayout } from "../components/layouts/AnonymousLayout";
 import { Login } from "../components/pages/login";
 import { AccountVerification } from "../components/pages/account-verification";
+import { MyTeam } from "../components/pages/my-team";
 
 export const routes = createBrowserRouter([
   {
@@ -18,8 +19,9 @@ export const routes = createBrowserRouter([
       {
         Component: AuthLayout,
         children: [
-          { index: true, Component: Home },
-          { path: "todos", Component: Todos },
+          { index: true, Component: Todos },
+          { path: "my-team", Component: MyTeam },
+
           { path: "account-verification", Component: AccountVerification }, // Placeholder for account verification
         ],
       },

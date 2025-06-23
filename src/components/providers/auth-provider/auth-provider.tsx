@@ -13,14 +13,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       myAxios
         .get("/current-user")
         .then((response) => {
-          console.log("Current user:", response.data);
           setUser(response.data);
           setLoading(false);
         })
-        .catch((error) => {
-          console.error("Error fetching current user:", error);
+        .catch(() => {
           setLoading(false);
+          setAuthToken(null);
         });
+    } else {
+      setLoading(false);
+      setUser(null);
     }
   }, []);
 

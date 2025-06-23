@@ -1,10 +1,13 @@
 import { Link } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { Card, CardContent } from "../../ui/card";
+
 import { Button } from "../../ui/button";
+import { useContext } from "react";
+import { AuthContext } from "../../providers/auth-provider/auth-context";
+import { setAuthToken } from "../../../lib/axios";
 
 export function AuthUserCard({ user }: { user: any }) {
-  console.log("AuthUserCard user:", user);
+  const { setUser } = useContext(AuthContext);
   if (!user) {
     return null;
   }
@@ -35,7 +38,10 @@ export function AuthUserCard({ user }: { user: any }) {
           <li>
             <Button
               variant={"ghost"}
-              onClick={() => console.log("do the work to logout the user")}
+              onClick={() => {
+                setAuthToken(null);
+                setUser(null);
+              }}
             >
               Logout
             </Button>

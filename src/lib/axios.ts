@@ -7,11 +7,11 @@ const myAxios = axios.create({
 function setAuthToken(token: string | null) {
   if (token) {
     localStorage.setItem("token", token);
+    myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
     localStorage.removeItem("token");
+    delete myAxios.defaults.headers.common["Authorization"];
   }
-
-  myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
 export { myAxios, setAuthToken };
